@@ -18,10 +18,9 @@ model Notification {
   id              Int       @id @default(autoincrement())
   typeId          Int
   message         String
-  path            String?
   personName      String?
   isRead          Boolean   @default(false)
-  iconUrl         String?
+  iconUrl         String
   typeDetail      NotificationType  @relation(fields: [typeId], references: [id])
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
