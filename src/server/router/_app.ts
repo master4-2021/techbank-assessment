@@ -8,44 +8,46 @@ export const appRouter = router({
     const notifications = await prisma.notification.findMany();
     return notifications;
   }),
-  createNotification: procedure
-    .input(
-      z.object({
-        typeId: z.number(),
-        message: z.string(),
-        personName: z.string().optional(),
-        iconUrl: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const created = await prisma.notification.create({
-        data: {
-          ...input,
-          isRead: false,
-        },
-      });
+  notification: router({
+    create: procedure
+      .input(
+        z.object({
+          typeId: z.number(),
+          message: z.string(),
+          personName: z.string().optional(),
+          iconUrl: z.string(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const created = await prisma.notification.create({
+          data: {
+            ...input,
+            isRead: false,
+          },
+        });
 
-      return created;
-    }),
-  markAsReadNotification: procedure
-    .input(
-      z.object({
-        id: z.number(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const updated = await prisma.notification.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          isRead: true,
-        },
-      });
+        return created;
+      }),
+    markAsRead: procedure
+      .input(
+        z.object({
+          id: z.number(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const updated = await prisma.notification.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            isRead: true,
+          },
+        });
 
-      return updated;
-    }),
-  getNotificationTypes: procedure.query(async (_opts) => {
+        return updated;
+      }),
+  }),
+  notificationType: procedure.query(async (_opts) => {
     const types = await prisma.notificationType.findMany();
     return types;
   }),
